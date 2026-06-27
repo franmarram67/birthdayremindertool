@@ -1,20 +1,56 @@
 <?php
 
 use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\Attributes\Validate;
+use App\Models\Contact;
 
 new class extends Component
 {
-    public $defaultContactImageSrc = "https://static.vecteezy.com/system/resources/thumbnails/009/734/564/small/default-avatar-profile-icon-of-social-media-user-vector.jpg";
+    use WithFileUploads;
 
-    public $full_name = "";
-    public $email = "";
-    public $phone_number = "";
+    #[Validate('required|string')]
+    public $full_name;
+
+    #[Validate('nullable|email')]
+    public $email;
+
+    #[Validate('nullable|string')]
+    public $phone_number;
+
+    #[Validate('nullable|image|dimensions:ratio=1|max:10240')]
     public $picture;
-    public $birth_date = "";
+
+    #[Validate('required|date|filled')]
+    public $birth_date;
 
     public function createContact()
     {
+        $this->validate();
 
+        $picturePath = null;
+        if (!is_null($this->picture)) {
+            $picturePath = $this->picture->store(path: "contact-pictures", options: "public");
+        }
+
+        Contact::create([
+            'full_name' => $this->full_name,
+            'email' => $this->email,
+            'phone_number' => $this->phone_number,
+            'picture' => $picturePath,
+            'birth_date' => $this->birth_date,
+            'user_id' => Auth::user()->id,
+        ]);
+
+        $this->redirect('contacts');
+
+        // dd([
+        //     $this->full_name,
+        //     $this->email,
+        //     $this->phone_number,
+        //     $picturePath,
+        //     $this->birth_date
+        // ]);
     }
 };
 ?>
@@ -51,7 +87,7 @@ new class extends Component
                 <flux:error name="birth_date" />
             </flux:field>
             <flux:separator />
-            <flux:button class="mt-2" type="submit" class="cursor-pointer" variant="primary">{{ __('Create') }}</flux:button>
+            <flux:button class="mt-2 cursor-pointer" type="submit" variant="primary">{{ __('Create') }}</flux:button>
         </form>
     </flux:modal>
     <div class="flex justify-between items-center">
@@ -67,9 +103,11 @@ new class extends Component
     </div>
     <div class="border-b border-zinc-400 mx-4"></div>
     <div>
-        <x-contacts.row :src="$defaultContactImageSrc"/>
+        @foreach (Auth::user()->contacts() as $contact)
         <x-contacts.row/>
-        <x-contacts.row/>
-        <x-contacts.row/>
+        @endforeach
+        @php
+            dd(Auth::user()->contacts());
+        @endphp
     </div>
 </div>

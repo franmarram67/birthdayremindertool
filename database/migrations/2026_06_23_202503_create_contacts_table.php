@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string("phone_number")->nullable();
             $table->string("picture")->nullable();
             $table->date("birth_date");
+            $table->foreignId("user_id");
             $table->timestamps();
         });
     }
