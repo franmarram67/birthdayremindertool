@@ -5,8 +5,7 @@ use Livewire\WithFileUploads;
 use Livewire\Attributes\Validate;
 use App\Models\Contact;
 
-new class extends Component
-{
+new class extends Component {
     use WithFileUploads;
 
     #[Validate('required|string')]
@@ -43,14 +42,6 @@ new class extends Component
         ]);
 
         $this->redirect('contacts');
-
-        // dd([
-        //     $this->full_name,
-        //     $this->email,
-        //     $this->phone_number,
-        //     $picturePath,
-        //     $this->birth_date
-        // ]);
     }
 };
 ?>
@@ -103,11 +94,8 @@ new class extends Component
     </div>
     <div class="border-b border-zinc-400 mx-4"></div>
     <div>
-        @foreach (Auth::user()->contacts() as $contact)
-        <x-contacts.row/>
+        @foreach (Auth::user()->contacts as $contact)
+            <x-contacts.row />
         @endforeach
-        @php
-            dd(Auth::user()->contacts());
-        @endphp
     </div>
 </div>
