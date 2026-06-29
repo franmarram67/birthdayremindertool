@@ -95,7 +95,16 @@ new class extends Component {
     <div class="border-b border-zinc-400 mx-4"></div>
     <div>
         @foreach (Auth::user()->contacts as $contact)
-            <x-contacts.row />
+        @php
+            $src = Storage::url($contact->picture);
+            // dd($src);
+        @endphp
+        {{-- @dd($contact) --}}
+            <x-contacts.row 
+                :src="$src"
+                :fullName="$contact->full_name"
+                :birthDate="$contact->birth_date"
+            />
         @endforeach
     </div>
 </div>
