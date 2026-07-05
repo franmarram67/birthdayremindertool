@@ -1,7 +1,7 @@
 @props([
     'src' => "https://static.vecteezy.com/system/resources/thumbnails/009/734/564/small/default-avatar-profile-icon-of-social-media-user-vector.jpg",
     'fullName' => "Default Name",
-    'birthDate' => "01-01-0001"
+    'birthDate' => "0001-01-01"
 ])
 
 <div class="py-2 border-b border-zinc-400 mx-4 flex justify-between items-center">

@@ -96,10 +96,8 @@ new class extends Component {
     <div>
         @foreach (Auth::user()->contacts as $contact)
         @php
-            $src = Storage::url($contact->picture);
-            // dd($src);
+            $src = !is_null($contact->picture) ? Storage::url($contact->picture) : "https://static.vecteezy.com/system/resources/thumbnails/009/734/564/small/default-avatar-profile-icon-of-social-media-user-vector.jpg";
         @endphp
-        {{-- @dd($contact) --}}
             <x-contacts.row 
                 :src="$src"
                 :fullName="$contact->full_name"
