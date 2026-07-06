@@ -9,6 +9,7 @@
     <h2>{{ $fullName }}</h2>
     <div class="flex justify-between items-center">
         <flux:badge class="mr-4" color="green">{{ $birthDate }}</flux:badge>
-        <flux:button variant="primary" class="cursor-pointer" ><flux:icon.pencil class="size-4" />Edit Contact</flux:button>
+        <flux:button variant="primary" class="cursor-pointer mr-4" ><flux:icon.pencil class="size-5" />Edit Contact</flux:button>
+        <flux:button variant="danger" class="cursor-pointer"><flux:icon.trash class="size-5" /></flux:button>
     </div>
 </div>

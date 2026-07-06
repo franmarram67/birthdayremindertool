@@ -81,6 +81,9 @@ new class extends Component {
             <flux:button class="mt-2 cursor-pointer" type="submit" variant="primary">{{ __('Create') }}</flux:button>
         </form>
     </flux:modal>
+    <flux:modal>
+        
+    </flux:modal>
     <div class="flex justify-between items-center">
         <div class="m-4">
             <flux:heading size="xl">{{ __('Contacts') }}</flux:heading>
