@@ -43,7 +43,7 @@ if ($flyout) {
         ->add(match ($variant) {
             default => 'bg-white dark:bg-zinc-800 border-transparent dark:border-zinc-700',
             'floating' => 'bg-white dark:bg-zinc-800 ring ring-black/5 dark:ring-zinc-700 shadow-lg rounded-xl',
-            'create-contact' => 'border dark:border-zinc-400 dark:bg-zinc-700',
+            'contact' => 'border dark:border-zinc-400 dark:bg-zinc-700',
             'bare' => 'bg-transparent',
         });
 } elseif ($overflow) {
@@ -57,7 +57,7 @@ if ($flyout) {
         })
         ->add(match ($variant) {
             default => 'bg-white dark:bg-zinc-800 ring ring-black/5 dark:ring-zinc-700 shadow-lg rounded-xl',
-            'create-contact' => 'border dark:border-zinc-400 dark:bg-zinc-700',
+            'contact' => 'border dark:border-zinc-400 dark:bg-zinc-700',
             'bare' => 'bg-transparent',
         });
 } else {
@@ -68,7 +68,7 @@ if ($flyout) {
         })
         ->add(match ($variant) {
             default => 'bg-white dark:bg-zinc-800 ring ring-black/5 dark:ring-zinc-700 shadow-lg rounded-xl',
-            'create-contact' => 'border dark:border-zinc-400 dark:bg-zinc-700',
+            'contact' => 'border dark:border-zinc-400 dark:bg-zinc-700',
             'bare' => 'bg-transparent',
         });
 }

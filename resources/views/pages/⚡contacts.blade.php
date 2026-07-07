@@ -23,6 +23,8 @@ new class extends Component {
     #[Validate('required|date|filled')]
     public $birth_date;
 
+    public int $contactId;
+
     public function createContact()
     {
         $this->validate();
@@ -43,11 +45,17 @@ new class extends Component {
 
         $this->redirect('contacts');
     }
+
+    public function setContactId(int $contactId)
+    {
+        $this->contactId = $contactId;
+        dd($this->contactId);
+    }
 };
 ?>
 
 <div class="border dark:border-zinc-400 w-full h-full rounded-lg dark:bg-zinc-700">
-    <flux:modal name="create-contact" variant="create-contact">
+    <flux:modal name="create-contact" variant="contact">
         <form wire:submit="createContact">
             <flux:heading size="lg" class="mb-2">{{ __('Create a Contact') }}</flux:heading>
             <flux:separator />
@@ -81,8 +89,8 @@ new class extends Component {
             <flux:button class="mt-2 cursor-pointer" type="submit" variant="primary">{{ __('Create') }}</flux:button>
         </form>
     </flux:modal>
-    <flux:modal>
-        
+    <flux:modal name="delete-contact" variant="contact">
+        <flux:heading size="lg" class="mb-2">{{ __('Something') }}</flux:heading>
     </flux:modal>
     <div class="flex justify-between items-center">
         <div class="m-4">
@@ -101,7 +109,8 @@ new class extends Component {
         @php
             $src = !is_null($contact->picture) ? Storage::url($contact->picture) : "https://static.vecteezy.com/system/resources/thumbnails/009/734/564/small/default-avatar-profile-icon-of-social-media-user-vector.jpg";
         @endphp
-            <x-contacts.row 
+            <x-contacts.row
+                :id="$contact->id"
                 :src="$src"
                 :fullName="$contact->full_name"
                 :birthDate="$contact->birth_date"
