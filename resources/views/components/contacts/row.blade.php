@@ -12,7 +12,9 @@
         <flux:badge class="mr-4" color="green">{{ $birthDate }}</flux:badge>
         <flux:button variant="primary" class="cursor-pointer mr-4" ><flux:icon.pencil class="size-5" />Edit Contact</flux:button>
         <flux:modal.trigger name="delete-contact">
-            <flux:button variant="danger" wire:click="setContactId({{ $id }})" class="cursor-pointer"><flux:icon.trash class="size-5" /></flux:button>
+            <flux:button variant="danger" 
+            @click="setContactData({{ $id }}, '{{ $fullName }}')" 
+            class="cursor-pointer"><flux:icon.trash class="size-5" /></flux:button>
         </flux:modal.trigger>
     </div>
 </div>

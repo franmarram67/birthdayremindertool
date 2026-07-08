@@ -23,8 +23,6 @@ new class extends Component {
     #[Validate('required|date|filled')]
     public $birth_date;
 
-    public int $contactId;
-
     public function createContact()
     {
         $this->validate();
@@ -45,16 +43,10 @@ new class extends Component {
 
         $this->redirect('contacts');
     }
-
-    public function setContactId(int $contactId)
-    {
-        $this->contactId = $contactId;
-        dd($this->contactId);
-    }
 };
 ?>
 
-<div class="border dark:border-zinc-400 w-full h-full rounded-lg dark:bg-zinc-700">
+<div class="border dark:border-zinc-400 w-full h-full rounded-lg dark:bg-zinc-700" x-data="contact">
     <flux:modal name="create-contact" variant="contact">
         <form wire:submit="createContact">
             <flux:heading size="lg" class="mb-2">{{ __('Create a Contact') }}</flux:heading>
@@ -91,6 +83,8 @@ new class extends Component {
     </flux:modal>
     <flux:modal name="delete-contact" variant="contact">
         <flux:heading size="lg" class="mb-2">{{ __('Something') }}</flux:heading>
+        <p x-text="id"></p>
+        <p x-text="full_name"></p>
     </flux:modal>
     <div class="flex justify-between items-center">
         <div class="m-4">
