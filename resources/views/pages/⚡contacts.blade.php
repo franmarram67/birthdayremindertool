@@ -1,45 +1,53 @@
 <?php
 
+use App\Livewire\Forms\CreateContactForm;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Livewire\Attributes\Validate;
 use App\Models\Contact;
 
 new class extends Component {
     use WithFileUploads;
 
-    #[Validate('required|string')]
-    public $full_name;
+    public CreateContactForm $create_contact_form;
 
-    #[Validate('nullable|email')]
-    public $email;
-
-    #[Validate('nullable|string')]
-    public $phone_number;
-
-    #[Validate('nullable|image|dimensions:ratio=1|max:10240')]
-    public $picture;
-
-    #[Validate('required|date|filled')]
-    public $birth_date;
+    public int $contact_id = 0;
 
     public function createContact()
     {
-        $this->validate();
+        $createContactForm = $this->create_contact_form;
+        $createContactForm->validate();
 
         $picturePath = null;
-        if (!is_null($this->picture)) {
-            $picturePath = $this->picture->store(path: "contact-pictures", options: "public");
+        if (!is_null($createContactForm->picture)) {
+            $picturePath = $createContactForm->picture->store(path: "contact-pictures", options: "public");
         }
 
         Contact::create([
-            'full_name' => $this->full_name,
-            'email' => $this->email,
-            'phone_number' => $this->phone_number,
+            'full_name' => $createContactForm->full_name,
+            'email' => $createContactForm->email,
+            'phone_number' => $createContactForm->phone_number,
             'picture' => $picturePath,
-            'birth_date' => $this->birth_date,
+            'birth_date' => $createContactForm->birth_date,
             'user_id' => Auth::user()->id,
         ]);
+
+        $this->redirect('contacts');
+    }
+
+    public function deleteContact()
+    {
+        try {
+            $this->validate([
+                'contact_id' => 'integer|gt:0'
+            ]);
+        } catch (\Exception $e) {
+            $this->addError('contact_id', $e->getMessage());
+            return;
+        }
+
+        $contact = Contact::whereBelongsTo(Auth::user())->find($this->contact_id);
+
+        $contact->delete();
 
         $this->redirect('contacts');
     }
@@ -53,28 +61,28 @@ new class extends Component {
             <flux:separator />
             <flux:field class="mt-2">
                 <flux:label>{{ __('Full name') }}</flux:label>
-                <flux:input wire:model="full_name" type="text" />
+                <flux:input wire:model="create_contact_form.full_name" type="text" />
                 <flux:error name="full_name" />
             </flux:field>
             <flux:field class="mt-2">
                 <flux:label>{{ __('Email') }}</flux:label>
-                <flux:input wire:model="email" type="email" />
+                <flux:input wire:model="create_contact_form.email" type="email" />
                 <flux:error name="email" />
             </flux:field>
             <flux:field class="mt-2">
                 <flux:label>{{ __('Phone number') }}</flux:label>
-                <flux:input wire:model="phone_number" type="text" />
+                <flux:input wire:model="create_contact_form.phone_number" type="text" />
                 <flux:error name="phone_number" />
             </flux:field>
             <flux:field class="mt-2">
                 <flux:label>{{ __('Picture') }}</flux:label>
-                <flux:input wire:model="picture" type="file" />
+                <flux:input wire:model="create_contact_form.picture" type="file" />
                 <flux:description>JPG or PNG max 10MB with aspect ratio 1:1</flux:description>
                 <flux:error name="picture" />
             </flux:field>
             <flux:field class="my-2">
                 <flux:label>{{ __('Birth date') }}</flux:label>
-                <flux:input wire:model="birth_date" type="date" />
+                <flux:input wire:model="create_contact_form.birth_date" type="date" />
                 <flux:error name="birth_date" />
             </flux:field>
             <flux:separator />
@@ -82,9 +90,18 @@ new class extends Component {
         </form>
     </flux:modal>
     <flux:modal name="delete-contact" variant="contact">
-        <flux:heading size="lg" class="mb-2">{{ __('Something') }}</flux:heading>
-        <p x-text="id"></p>
-        <p x-text="full_name"></p>
+        <form wire:submit="deleteContact">
+            <flux:heading size="lg" class="mb-2">{{ __('Delete a Contact') }}</flux:heading>
+            <flux:separator />
+            <flux:text class="my-2">Are you sure you want to delete your "<span x-text="full_name"></span>" contact?</flux:text>
+            <flux:input type="hidden" x-bind:value="id" wire:model="contact_id" x-effect="$wire.contact_id = id" /> {{-- without x-effect this doesn't work. please treat this as super fragile --}}
+            <flux:error name="contact_id"></flux:error>
+            <flux:separator />
+            <div class="mt-2">
+                <flux:button class="cursor-pointer mr-2" type="button" variant="primary" @click="$flux.modals('delete-contact').close()">{{ __('Cancel') }}</flux:button>
+                <flux:button class="cursor-pointer" type="submit" variant="danger">{{ __('Delete') }}</flux:button>
+            </div>
+        </form>
     </flux:modal>
     <div class="flex justify-between items-center">
         <div class="m-4">
