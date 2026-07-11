@@ -7,18 +7,17 @@ document.addEventListener('alpine:init', () => {
         phone_number: null,
         picture: null,
         birth_date: null,
-        setContactData(id, full_name) {
+        setDeleteContactIdAndFullName(id, full_name) {
             this.id = id;
             this.full_name = full_name;
         },
-        loadContactData(id) {
-            this.$wire.loadContactData(id);
+        setFullContactDataAndWireLoadIt(id, full_name, email, phone_number, picture, birth_date) {
             this.id = id;
-            this.full_name = this.$wire.create_edit_contact_form.full_name;
-            this.email = this.$wire.create_edit_contact_form.email;
-            this.phone_number = this.$wire.create_edit_contact_form.phone_number;
-            this.picture = this.$wire.create_edit_contact_form.picture;
-            this.birth_date = this.$wire.create_edit_contact_form.birth_date;
+            this.full_name = full_name;
+            this.email = email;
+            this.phone_number = phone_number;
+            this.picture = picture;
+            this.birth_date = birth_date;
         }
     }));
 })
