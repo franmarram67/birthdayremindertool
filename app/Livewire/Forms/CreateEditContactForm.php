@@ -5,7 +5,7 @@ namespace App\Livewire\Forms;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
-class CreateContactForm extends Form
+class CreateEditContactForm extends Form
 {
     #[Validate('required|string')]
     public $full_name;

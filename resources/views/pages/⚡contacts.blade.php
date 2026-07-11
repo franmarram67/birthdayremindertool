@@ -1,6 +1,6 @@
 <?php
 
-use App\Livewire\Forms\CreateContactForm;
+use App\Livewire\Forms\CreateEditContactForm;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\Contact;
@@ -8,7 +8,7 @@ use App\Models\Contact;
 new class extends Component {
     use WithFileUploads;
 
-    public CreateContactForm $create_contact_form;
+    public CreateEditContactForm $create_edit_contact_form;
 
     public int $contact_id = 0;
 
@@ -51,6 +51,26 @@ new class extends Component {
 
         $this->redirect('contacts');
     }
+
+    public function loadContactData($id)
+    {
+        $contact = Contact::whereBelongsTo(Auth::user())->find($id);
+
+        $this->create_edit_contact_form->full_name = $contact->full_name;
+        $this->create_edit_contact_form->email = $contact->email;
+        $this->create_edit_contact_form->phone_number = $contact->phone_number;
+        $this->create_edit_contact_form->picture = $contact->picture;
+        $this->create_edit_contact_form->birth_date = $contact->birth_date;
+        // dd($contact);
+        // dd($this->create_edit_contact_form);
+        // return [
+        //     'full_name' => $contact->full_name,
+        //     'email' => $contact->email,
+        //     'phone_number' => $contact->phone_number,
+        //     'picture' => $contact->picture,
+        //     'birth_date' => $contact->birth_date,
+        // ];
+    }
 };
 ?>
 
@@ -61,28 +81,28 @@ new class extends Component {
             <flux:separator />
             <flux:field class="mt-2">
                 <flux:label>{{ __('Full name') }}</flux:label>
-                <flux:input wire:model="create_contact_form.full_name" type="text" />
+                <flux:input wire:model="create_edit_contact_form.full_name" type="text" />
                 <flux:error name="full_name" />
             </flux:field>
             <flux:field class="mt-2">
                 <flux:label>{{ __('Email') }}</flux:label>
-                <flux:input wire:model="create_contact_form.email" type="email" />
+                <flux:input wire:model="create_edit_contact_form.email" type="email" />
                 <flux:error name="email" />
             </flux:field>
             <flux:field class="mt-2">
                 <flux:label>{{ __('Phone number') }}</flux:label>
-                <flux:input wire:model="create_contact_form.phone_number" type="text" />
+                <flux:input wire:model="create_edit_contact_form.phone_number" type="text" />
                 <flux:error name="phone_number" />
             </flux:field>
             <flux:field class="mt-2">
                 <flux:label>{{ __('Picture') }}</flux:label>
-                <flux:input wire:model="create_contact_form.picture" type="file" />
+                <flux:input wire:model="create_edit_contact_form.picture" type="file" />
                 <flux:description>JPG or PNG max 10MB with aspect ratio 1:1</flux:description>
                 <flux:error name="picture" />
             </flux:field>
             <flux:field class="my-2">
                 <flux:label>{{ __('Birth date') }}</flux:label>
-                <flux:input wire:model="create_contact_form.birth_date" type="date" />
+                <flux:input wire:model="create_edit_contact_form.birth_date" type="date" />
                 <flux:error name="birth_date" />
             </flux:field>
             <flux:separator />
@@ -101,6 +121,40 @@ new class extends Component {
                 <flux:button class="cursor-pointer mr-2" type="button" variant="primary" @click="$flux.modals('delete-contact').close()">{{ __('Cancel') }}</flux:button>
                 <flux:button class="cursor-pointer" type="submit" variant="danger">{{ __('Delete') }}</flux:button>
             </div>
+        </form>
+    </flux:modal>
+    <flux:modal name="edit-contact" variant="contact">
+        <form wire:submit="editContact">
+            <flux:heading size="lg" class="mb-2">{{ __('Edit a Contact') }}</flux:heading>
+            <flux:separator />
+            <flux:field class="mt-2">
+                <flux:label>{{ __('Full name') }}</flux:label>
+                <flux:input wire:model="create_edit_contact_form.full_name" type="text" x-bind:value="full_name" />
+                <flux:error name="full_name" />
+            </flux:field>
+            <flux:field class="mt-2">
+                <flux:label>{{ __('Email') }}</flux:label>
+                <flux:input wire:model="create_edit_contact_form.email" type="email" x-bind:value="email" />
+                <flux:error name="email" />
+            </flux:field>
+            <flux:field class="mt-2">
+                <flux:label>{{ __('Phone number') }}</flux:label>
+                <flux:input wire:model="create_contact_form.phone_number" type="text" x-bind:value="phone_number" />
+                <flux:error name="phone_number" />
+            </flux:field>
+            <flux:field class="mt-2">
+                <flux:label>{{ __('Picture') }}</flux:label>
+                <flux:input wire:model="create_contact_form.picture" type="file" />
+                <flux:description>JPG or PNG max 10MB with aspect ratio 1:1</flux:description>
+                <flux:error name="picture" />
+            </flux:field>
+            <flux:field class="my-2">
+                <flux:label>{{ __('Birth date') }}</flux:label>
+                <flux:input wire:model="create_contact_form.birth_date" type="date" x-bind:value="birth_date" />
+                <flux:error name="birth_date" />
+            </flux:field>
+            <flux:separator />
+            <flux:button class="mt-2 cursor-pointer" type="submit" variant="primary">{{ __('Create') }}</flux:button>
         </form>
     </flux:modal>
     <div class="flex justify-between items-center">
