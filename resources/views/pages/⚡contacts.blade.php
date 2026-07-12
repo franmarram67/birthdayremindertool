@@ -4,6 +4,7 @@ use App\Livewire\Forms\CreateEditContactForm;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\Contact;
+use Illuminate\Support\Facades\Storage;
 
 new class extends Component {
     use WithFileUploads;
@@ -49,6 +50,10 @@ new class extends Component {
 
         $contact = Contact::whereBelongsTo(Auth::user())->find($this->contact_id);
 
+        dd($contact);
+
+        Storage::delete($contact->picture);
+
         $contact->delete();
 
         $this->redirect('contacts');
@@ -56,24 +61,25 @@ new class extends Component {
 
     public function editContact()
     {
-        $createContactForm = $this->create_edit_contact_form;
-        $createContactForm->validate();
+        $createEditContactForm = $this->create_edit_contact_form;
+        $createEditContactForm->validate();
 
         // TODO: Delete previous image before updating, perhaps tweak order so we check if contact exists and throw an error or something
+        dd($createEditContactForm);
 
         $picturePath = null;
-        if (!is_null($createContactForm->picture)) {
-            $picturePath = $createContactForm->picture->store(path: "contact-pictures", options: "public");
+        if (!is_null($createEditContactForm->picture)) {
+            $picturePath = $createEditContactForm->picture->store(path: "contact-pictures", options: "public");
         }
 
         $contact = Contact::whereBelongsTo(Auth::user())->find($this->contact_id);
 
         $contact->update([
-            'full_name' => $createContactForm->full_name,
-            'email' => $createContactForm->email,
-            'phone_number' => $createContactForm->phone_number,
+            'full_name' => $createEditContactForm->full_name,
+            'email' => $createEditContactForm->email,
+            'phone_number' => $createEditContactForm->phone_number,
             'picture' => $picturePath,
-            'birth_date' => $createContactForm->birth_date,
+            'birth_date' => $createEditContactForm->birth_date,
             'user_id' => Auth::user()->id,
         ]);
 
@@ -171,6 +177,7 @@ new class extends Component {
                 <flux:input 
                     wire:model="create_edit_contact_form.picture" 
                     type="file" 
+                    x-effect="$wire.create_edit_contact_form.picture = picture"
                 />
                 <flux:description>JPG or PNG max 10MB with aspect ratio 1:1</flux:description>
                 <flux:error name="picture" />
@@ -186,7 +193,7 @@ new class extends Component {
                 <flux:error name="birth_date" />
             </flux:field>
             <flux:separator />
-            <flux:button class="mt-2 cursor-pointer" type="submit" variant="primary">{{ __('Create') }}</flux:button>
+            <flux:button class="mt-2 cursor-pointer" type="submit" variant="primary">{{ __('Update') }}</flux:button>
         </form>
     </flux:modal>
     <div class="flex justify-between items-center">
