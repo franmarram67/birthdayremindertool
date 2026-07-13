@@ -46,13 +46,9 @@ new class extends Component {
             return;
         }
 
-        // TODO: Delete image as well
-
         $contact = Contact::whereBelongsTo(Auth::user())->find($this->contact_id);
 
-        dd($contact);
-
-        Storage::delete($contact->picture);
+        Storage::disk('public')->delete($contact->picture);
 
         $contact->delete();
 
@@ -73,6 +69,8 @@ new class extends Component {
         }
 
         $contact = Contact::whereBelongsTo(Auth::user())->find($this->contact_id);
+
+        Storage::disk('public')->delete($contact->picture);
 
         $contact->update([
             'full_name' => $createEditContactForm->full_name,
@@ -177,7 +175,7 @@ new class extends Component {
                 <flux:input 
                     wire:model="create_edit_contact_form.picture" 
                     type="file" 
-                    x-effect="$wire.create_edit_contact_form.picture = picture"
+                    {{-- x-effect="$wire.create_edit_contact_form.picture = picture" --}}
                 />
                 <flux:description>JPG or PNG max 10MB with aspect ratio 1:1</flux:description>
                 <flux:error name="picture" />
