@@ -48,6 +48,11 @@ new class extends Component {
 
         $contact = Contact::whereBelongsTo(Auth::user())->find($this->contact_id);
 
+        if (!$contact) {
+            $this->addError('contact_id', 'The sent contact_id doesn\'t exist for this user');
+            return;
+        }
+
         Storage::disk('public')->delete($contact->picture);
 
         $contact->delete();
@@ -60,23 +65,26 @@ new class extends Component {
         $createEditContactForm = $this->create_edit_contact_form;
         $createEditContactForm->validate();
 
-        // TODO: Delete previous image before updating, perhaps tweak order so we check if contact exists and throw an error or something
-        dd($createEditContactForm);
+        $contact = Contact::whereBelongsTo(Auth::user())->find($this->contact_id);
+
+        if (!$contact) {
+            $this->addError('contact_id', 'The sent contact_id doesn\'t exist for this user');
+            return;
+        }
 
         $picturePath = null;
         if (!is_null($createEditContactForm->picture)) {
             $picturePath = $createEditContactForm->picture->store(path: "contact-pictures", options: "public");
+            if (!is_null($contact->picture)) {
+                Storage::disk('public')->delete($contact->picture);
+            }
         }
-
-        $contact = Contact::whereBelongsTo(Auth::user())->find($this->contact_id);
-
-        Storage::disk('public')->delete($contact->picture);
 
         $contact->update([
             'full_name' => $createEditContactForm->full_name,
             'email' => $createEditContactForm->email,
             'phone_number' => $createEditContactForm->phone_number,
-            'picture' => $picturePath,
+            'picture' => $picturePath ?? $contact->picture,
             'birth_date' => $createEditContactForm->birth_date,
             'user_id' => Auth::user()->id,
         ]);
@@ -139,7 +147,6 @@ new class extends Component {
         <form wire:submit="editContact">
             <flux:heading size="lg" class="mb-2">{{ __('Edit a Contact') }}</flux:heading>
             <flux:separator />
-            <flux:input type="hidden" x-bind:value="id" wire:model="contact_id" x-effect="$wire.contact_id = id" /> {{-- without x-effect this doesn't work. please treat this as super fragile --}}
             <flux:field class="mt-2">
                 <flux:label>{{ __('Full name') }}</flux:label>
                 <flux:input 
@@ -190,6 +197,8 @@ new class extends Component {
                 />
                 <flux:error name="birth_date" />
             </flux:field>
+            <flux:input type="hidden" x-bind:value="id" wire:model="contact_id" x-effect="$wire.contact_id = id" /> {{-- without x-effect this doesn't work. please treat this as super fragile --}}
+            <flux:error name="contact_id"></flux:error>
             <flux:separator />
             <flux:button class="mt-2 cursor-pointer" type="submit" variant="primary">{{ __('Update') }}</flux:button>
         </form>
