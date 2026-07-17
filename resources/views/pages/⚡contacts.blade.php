@@ -95,7 +95,11 @@ new class extends Component {
 ?>
 
 <div class="border dark:border-zinc-400 w-full h-full rounded-lg dark:bg-zinc-700" x-data="contact">
-    <flux:modal name="create-contact" variant="contact">
+    <flux:modal name="create-contact" variant="contact"
+        x-data="{ disabled: false }"
+        x-on:livewire-upload-start="disabled = true"
+        x-on:livewire-upload-finish="disabled = false"
+    >
         <form wire:submit="createContact">
             <flux:heading size="lg" class="mb-2">{{ __('Create a Contact') }}</flux:heading>
             <flux:separator />
@@ -126,7 +130,7 @@ new class extends Component {
                 <flux:error name="birth_date" />
             </flux:field>
             <flux:separator />
-            <flux:button class="mt-2 cursor-pointer" type="submit" variant="primary">{{ __('Create') }}</flux:button>
+            <flux:button class="mt-2 cursor-pointer" x-bind:disabled="disabled" type="submit" variant="primary">{{ __('Create') }}</flux:button>
         </form>
     </flux:modal>
     <flux:modal name="delete-contact" variant="contact">
@@ -143,7 +147,11 @@ new class extends Component {
             </div>
         </form>
     </flux:modal>
-    <flux:modal name="edit-contact" variant="contact">
+    <flux:modal name="edit-contact" variant="contact" 
+        x-data="{ disabled: false }"
+        x-on:livewire-upload-start="disabled = true"
+        x-on:livewire-upload-finish="disabled = false"
+    >
         <form wire:submit="editContact">
             <flux:heading size="lg" class="mb-2">{{ __('Edit a Contact') }}</flux:heading>
             <flux:separator />
@@ -200,7 +208,7 @@ new class extends Component {
             <flux:input type="hidden" x-bind:value="id" wire:model="contact_id" x-effect="$wire.contact_id = id" /> {{-- without x-effect this doesn't work. please treat this as super fragile --}}
             <flux:error name="contact_id"></flux:error>
             <flux:separator />
-            <flux:button class="mt-2 cursor-pointer" type="submit" variant="primary">{{ __('Update') }}</flux:button>
+            <flux:button class="mt-2 cursor-pointer" x-bind:disabled="disabled" type="submit" variant="primary">{{ __('Update') }}</flux:button>
         </form>
     </flux:modal>
     <div class="flex justify-between items-center">
