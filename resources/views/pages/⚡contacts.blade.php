@@ -216,7 +216,8 @@ new class extends Component {
             <flux:heading size="xl">{{ __('Contacts') }}</flux:heading>
             <flux:subheading>{{ __('Add or manage contacts') }}</flux:subheading>
         </div>
-        <flux:modal.trigger name="create-contact">
+        <flux:modal.trigger name="create-contact"
+        @click="setFullContactDataAndWireLoadIt(0, '', '', '', '', '')">
             <flux:button class="mr-4 cursor-pointer" variant="primary">
                 <flux:icon.plus />{{ __('Create Contact') }}
             </flux:button>
