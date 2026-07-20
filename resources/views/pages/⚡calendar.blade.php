@@ -17,8 +17,15 @@ new class extends Component
     </div>
     <div class="border-b border-zinc-400 mx-4"></div>
     <div class="flex justify-between items-center">
-        <div class="m-4">
-            <flux:input />
+        <div class="m-4 flex items-center">
+            <flux:field>
+                <flux:label>Month</flux:label>
+                <flux:select placeholder="Choose a month..."></flux:select>
+            </flux:field>
+            <flux:field class="ml-4">
+                <flux:label>Year</flux:label>
+                <flux:select placeholder="Choose a year..."></flux:select>
+            </flux:field>
         </div>
     </div>
 </div>
