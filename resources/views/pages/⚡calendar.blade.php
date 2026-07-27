@@ -33,8 +33,10 @@ new class extends Component
                     class="flex justify-center items-center [&:hover>svg]:stroke-zinc-300  relative" 
                     x-data="{ 
                         focusSearchSelect: false,
-                        searchSelect(value) {
-                            let allSearchElements = document.querySelectorAll('.search-element');
+                        searchSelect(searchElement) {
+                            let value = searchElement.value;
+                            let selectSearch = searchElement.parentNode.querySelector('[select-search]');
+                            let allSearchElements = selectSearch.querySelectorAll('.search-element');
                             let numberOfSearchElements = allSearchElements.length;
                             let numberOfHiddenSearchElements = 0;
                             allSearchElements.forEach((element) => {
@@ -46,7 +48,7 @@ new class extends Component
                                     element.classList.remove('hidden');
                                 }
                             });
-                            let defaultSearch = document.getElementById('default-search');
+                            let defaultSearch = selectSearch.querySelector('.default-search-element');
                             if (numberOfHiddenSearchElements >= numberOfSearchElements) {
                                 defaultSearch.classList.remove('hidden');
                             } else {
@@ -59,18 +61,23 @@ new class extends Component
                             console.log(number);
                             console.log(text);
                             this.focusSearchSelect = false;
-                            console.log(this.focusSearchSelect);
                         }
                     }" 
                     @click.outside="focusSearchSelect = false" 
                     @click="focusSearchSelect = true"
                 >
                     <input 
+                        type="hidden"
+                        value=""
+                        name="search-number"
+                    />
+                    <input 
                         type="text" 
                         placeholder="Choose a month..." 
                         class="p-[0.56rem] focus:outline-0 text-zinc-300 text-sm w-40 border dark:border-zinc-400 rounded-lg dark:bg-zinc-600 dark:hover:border-zinc-300"
                         :class="focusSearchSelect ? 'border-b-0 rounded-b-none dark:border-zinc-300!' : ''"
-                        @input="searchSelect($el.value)" 
+                        @input="searchSelect($el)" 
+                        name="search-text"
                     />
                     <svg 
                         width='24' 
@@ -91,6 +98,7 @@ new class extends Component
                     <div 
                         class="absolute border dark:border-zinc-300 rounded-lg dark:bg-zinc-600 w-40 max-h-38 mt-0 top-9.5 left-0 border-t-0 rounded-t-none overflow-scroll" 
                         :class="focusSearchSelect ? '' : 'hidden'"
+                        select-search
                         x-data="{ 
                             monthsOfYear: {
                                 1: 'January',
@@ -108,13 +116,13 @@ new class extends Component
                             }
                         }"
                     >
-                        <div class="text-zinc-400 text-sm p-[0.56rem] hidden" id="default-search">No results found.</div>
+                        <div class="text-zinc-400 text-sm p-[0.56rem] hidden default-search-element">No results found.</div>
                         <template x-for="(value, index) in monthsOfYear">
                             <div 
                                 class="text-zinc-300 text-sm p-[0.56rem] hover:bg-zinc-500 search-element" 
                                 :data-number="index" 
                                 x-text="value"
-                                @click="selectElement($el)"
+                                @click.stop="selectElement($el)"
                             >
                             </div>
                         </template>
