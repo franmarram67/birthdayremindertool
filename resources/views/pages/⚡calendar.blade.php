@@ -58,8 +58,15 @@ new class extends Component
                         selectElement(element) {
                             let number = element.getAttribute('data-number');
                             let text = element.innerText;
+                            let inputsParent = element.parentNode.parentNode;
+                            let inputText = inputsParent.querySelector(`input[type='text']`);
+                            let inputHidden = inputsParent.querySelector(`input[type='hidden']`);
+                            inputText.value = text;
+                            inputHidden.value = number;
                             console.log(number);
                             console.log(text);
+                            console.log(inputText);
+                            console.log(inputHidden);
                             this.focusSearchSelect = false;
                         }
                     }" 
