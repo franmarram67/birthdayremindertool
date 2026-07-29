@@ -33,7 +33,7 @@ new class extends Component
                     class="flex justify-center items-center [&:hover>svg]:stroke-zinc-300  relative" 
                     x-data="{ 
                         focusSearchSelect: false,
-                        searchSelect(searchElement) {
+                        searchSelectBase(searchElement) {
                             let value = searchElement.value;
                             let selectSearch = searchElement.parentNode.querySelector('[select-search]');
                             let allSearchElements = selectSearch.querySelectorAll('.search-element');
@@ -55,6 +55,11 @@ new class extends Component
                                 defaultSearch.classList.add('hidden');
                             }
                         },
+                        searchSelect(searchElement) {
+                            this.searchSelectBase(searchElement);
+                            let inputHidden = searchElement.parentNode.querySelector(`input[type='hidden']`);
+                            inputHidden.value = '';
+                        },
                         selectElement(element) {
                             let number = element.getAttribute('data-number');
                             let text = element.innerText;
@@ -63,10 +68,7 @@ new class extends Component
                             let inputHidden = inputsParent.querySelector(`input[type='hidden']`);
                             inputText.value = text;
                             inputHidden.value = number;
-                            console.log(number);
-                            console.log(text);
-                            console.log(inputText);
-                            console.log(inputHidden);
+                            this.searchSelectBase(inputText);
                             this.focusSearchSelect = false;
                         }
                     }" 
