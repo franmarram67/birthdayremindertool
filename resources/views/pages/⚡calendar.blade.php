@@ -1,22 +1,17 @@
 <?php
 
 use Livewire\Component;
+use Illuminate\Support\Carbon;
 
 new class extends Component
 {
-    //
+    public function getMonthsOfYearForSelectSearch()
+    {
+        $startMonth = Carbon::create(date('Y'))->format('F');
+        dd($startMonth);
+    }
 };
 ?>
-<style>
-    .bgStrokeChevronUpDown {
-        background-image: url("data:image/svg+xml,<svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M8 9L12 5L16 9' stroke='#A1A1AA' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/><path d='M16 15L12 19L8 15' stroke='#A1A1AA' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
-        background-position: right .5rem center;
-        background-repeat: no-repeat;
-        background-size: 1.5em 1.5em;
-        padding-inline-end: 2.5rem;
-        print-color-adjust: exact;
-    }
-</style>
 <div class="border dark:border-zinc-400 w-full h-full rounded-lg dark:bg-zinc-700">
     <div class="flex justify-between items-center">
         <div class="m-4">
@@ -104,6 +99,9 @@ new class extends Component
                         class="absolute border-t border-t-zinc-500 w-39.5 h-0 top-9.5 left-px z-10"
                         :class="focusSearchSelect ? '' : 'hidden'"
                     ></span>
+                    @php
+                        $this->getMonthsOfYearForSelectSearch();
+                    @endphp
                     <div 
                         class="absolute border dark:border-zinc-300 rounded-lg dark:bg-zinc-600 w-40 max-h-38 mt-0 top-9.5 left-0 border-t-0 rounded-t-none overflow-scroll" 
                         :class="focusSearchSelect ? '' : 'hidden'"
