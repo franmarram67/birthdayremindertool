@@ -7,8 +7,13 @@ new class extends Component
 {
     public function getMonthsOfYearForSelectSearch()
     {
-        $startMonth = Carbon::create(date('Y'))->format('F');
-        dd($startMonth);
+        $months = [];
+        $startMonth = Carbon::create(date('Y'));
+        $months[1] = $startMonth->format('F');
+        for ($i = 2; $i <= 12; $i++) {
+            $months[$i] = $startMonth->addMonth()->format('F');
+        }
+        return $months;
     }
 };
 ?>
@@ -25,7 +30,7 @@ new class extends Component
             <flux:field>
                 <flux:label>Month</flux:label>
                 <div 
-                    class="flex justify-center items-center [&:hover>svg]:stroke-zinc-300  relative" 
+                    class="flex justify-center items-center [&:hover>svg]:stroke-zinc-300 relative" 
                     x-data="{ 
                         focusSearchSelect: false,
                         searchSelectBase(searchElement) {
@@ -79,7 +84,7 @@ new class extends Component
                         type="text" 
                         placeholder="Choose a month..." 
                         class="p-[0.56rem] focus:outline-0 text-zinc-300 text-sm w-40 border dark:border-zinc-400 rounded-lg dark:bg-zinc-600 dark:hover:border-zinc-300"
-                        :class="focusSearchSelect ? 'border-b-0 rounded-b-none dark:border-zinc-300!' : ''"
+                        :class="focusSearchSelect ? 'border-b border-b-transparent rounded-b-none dark:border-zinc-300!' : ''"
                         @input="searchSelect($el)" 
                         name="search-text"
                     />
@@ -99,40 +104,21 @@ new class extends Component
                         class="absolute border-t border-t-zinc-500 w-39.5 h-0 top-9.5 left-px z-10"
                         :class="focusSearchSelect ? '' : 'hidden'"
                     ></span>
-                    @php
-                        $this->getMonthsOfYearForSelectSearch();
-                    @endphp
                     <div 
                         class="absolute border dark:border-zinc-300 rounded-lg dark:bg-zinc-600 w-40 max-h-38 mt-0 top-9.5 left-0 border-t-0 rounded-t-none overflow-scroll" 
                         :class="focusSearchSelect ? '' : 'hidden'"
                         select-search
-                        x-data="{ 
-                            monthsOfYear: {
-                                1: 'January',
-                                2: 'February',
-                                3: 'March',
-                                4: 'April',
-                                5: 'May',
-                                6: 'June',
-                                7: 'July',
-                                8: 'August',
-                                9: 'September',
-                                10: 'October',
-                                11: 'November',
-                                12: 'December',
-                            }
-                        }"
                     >
                         <div class="text-zinc-400 text-sm p-[0.56rem] hidden default-search-element">No results found.</div>
-                        <template x-for="(value, index) in monthsOfYear">
+                        @foreach ($this->getMonthsOfYearForSelectSearch() as $key => $month)
                             <div 
                                 class="text-zinc-300 text-sm p-[0.56rem] hover:bg-zinc-500 search-element" 
-                                :data-number="index" 
-                                x-text="value"
+                                data-number="{{ $key }}" 
                                 @click.stop="selectElement($el)"
                             >
+                                {{ $month }}
                             </div>
-                        </template>
+                        @endforeach
                     </div>
                 </div>
             </flux:field>
