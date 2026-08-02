@@ -31,7 +31,7 @@ new class extends Component
         <div class="m-4 flex items-center">
             <flux:field>
                 <flux:label>Month</flux:label>
-                <x-utils.select-search>
+                <x-utils.select-search :inputHiddenModel="'month'">
                 @foreach ($this->getMonthsOfYearForSelectSearch() as $monthNumber => $monthName)
                     <x-utils.select-search-element :key="$monthNumber" :value="$monthName" />
                 @endforeach
@@ -42,6 +42,10 @@ new class extends Component
                 <flux:select placeholder="Choose a year...">
                     <flux:select.option>1000</flux:select.option>
                 </flux:select>
+            </flux:field>
+            <flux:field class="ml-4">
+                <span class="h-[17.5px]"></span>
+                <flux:button type="submit" variant="primary">{{ __('Search') }}</flux:button>
             </flux:field>
         </div>
     </div>
