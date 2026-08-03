@@ -44,7 +44,7 @@
         }
     }" 
     @click.outside="focusSearchSelect = false" @click="focusSearchSelect = true">
-    <input type="hidden" value="" name="search-number" wire:model="{{ $inputHiddenModel }}"/>
+    <input type="hidden" value="" name="search-number" wire:model="{{ $inputHiddenModel }}" x-effect="$wire.{{ $inputHiddenModel }} = $el.value"/>
     <input type="text" placeholder="Choose a month..."
         class="p-[0.56rem] focus:outline-0 text-zinc-300 text-sm w-40 border dark:border-zinc-400 rounded-lg dark:bg-zinc-600 dark:hover:border-zinc-300"
         :class="focusSearchSelect ? 'border-b border-b-transparent rounded-b-none dark:border-zinc-300!' : ''"
