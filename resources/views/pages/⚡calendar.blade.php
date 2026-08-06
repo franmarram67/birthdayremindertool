@@ -6,6 +6,12 @@ use Illuminate\Support\Carbon;
 new class extends Component
 {
     public $month = "";
+    public int $year;
+
+    public function mount()
+    {
+        $this->year = date('Y');
+    }
 
     public function getMonthsOfYearForSelectSearch()
     {
@@ -45,9 +51,7 @@ new class extends Component
                 </flux:field>
                 <flux:field class="ml-4">
                     <flux:label>Year</flux:label>
-                    <flux:select placeholder="Choose a year...">
-                        <flux:select.option>1000</flux:select.option>
-                    </flux:select>
+                    <flux:input type="number" min="1980" max="{{ date('Y') }}" placeholder="Choose a year..." wire:model="year" />
                 </flux:field>
                 <flux:field class="ml-4">
                     <span class="h-[17.5px]"></span>
