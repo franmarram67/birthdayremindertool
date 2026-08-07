@@ -5,21 +5,22 @@ use Illuminate\Support\Carbon;
 
 new class extends Component
 {
-    public $month = "";
+    public int $month;
     public int $year;
 
     public function mount()
     {
         $this->year = date('Y');
+        $this->month = date('m');
     }
 
     public function getMonthsOfYearForSelectSearch()
     {
         $months = [];
         $startMonth = Carbon::create(date('Y'));
-        $months[1] = $startMonth->format('F');
-        for ($i = 2; $i <= 12; $i++) {
-            $months[$i] = $startMonth->addMonth()->format('F');
+        for ($i = 1; $i <= 12; $i++) {
+            $monthName = $i === 1 ? $startMonth->format('F') : $startMonth->addMonth()->format('F');
+            $months[$i] = ['monthName' => $monthName, 'isSelected' => $this->month === $i];
         }
         return $months;
     }
@@ -44,14 +45,14 @@ new class extends Component
                 <flux:field>
                     <flux:label>Month</flux:label>
                     <x-utils.select-search :inputHiddenModel="'month'">
-                    @foreach ($this->getMonthsOfYearForSelectSearch() as $monthNumber => $monthName)
-                        <x-utils.select-search-element :key="$monthNumber" :value="$monthName" />
+                    @foreach ($this->getMonthsOfYearForSelectSearch() as $monthNumber => $monthData)
+                        <x-utils.select-search-element :key="$monthNumber" :value="$monthData['monthName']" :isSelected="$monthData['isSelected']" />
                     @endforeach
                     </x-utils.select-search>
                 </flux:field>
                 <flux:field class="ml-4">
                     <flux:label>Year</flux:label>
-                    <flux:input type="number" min="1980" max="{{ date('Y') }}" placeholder="Choose a year..." wire:model="year" />
+                    <flux:input type="number" min="1980" placeholder="Choose a year..." wire:model="year" class="w-40!" />
                 </flux:field>
                 <flux:field class="ml-4">
                     <span class="h-[17.5px]"></span>
