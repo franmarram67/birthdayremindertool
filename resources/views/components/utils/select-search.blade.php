@@ -37,8 +37,8 @@
             let inputsParent = element.parentNode.parentNode;
             let inputText = inputsParent.querySelector(`input[type='text']`);
             let inputHidden = inputsParent.querySelector(`input[type='hidden']`);
-            inputText.value = text;
-            inputHidden.value = number;
+            inputText.value = text.trim();
+            inputHidden.value = number.trim();
             this.searchSelectBase(inputText);
             this.focusSearchSelect = false;
             this.$wire.{{ $inputHiddenModel }} = inputHidden.value;

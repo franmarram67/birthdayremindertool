@@ -10,24 +10,30 @@ new class extends Component
 
     public function mount()
     {
-        $this->year = date('Y');
+        $requestedYear = (int) request()->year ?? null;
+        $this->year = is_null($requestedYear) ? date('Y') : $requestedYear;
         $this->month = date('m');
     }
 
     public function getMonthsOfYearForSelectSearch()
     {
+        $requestedMonth = (int) request()->month ?? null;
         $months = [];
         $startMonth = Carbon::create(date('Y'));
         for ($i = 1; $i <= 12; $i++) {
             $monthName = $i === 1 ? $startMonth->format('F') : $startMonth->addMonth()->format('F');
-            $months[$i] = ['monthName' => $monthName, 'isSelected' => $this->month === $i];
+            $months[$i] = [
+                'monthName' => $monthName, 
+                'isSelected' => is_null($requestedMonth) ? $this->month === $i : $requestedMonth === $i,
+            ];
         }
         return $months;
     }
 
     public function searchCalendar()
     {
-        dd($this->month);
+        $redirectUrl = "calendar?month={$this->month}&year={$this->year}";
+        $this->redirect($redirectUrl, navigate: true);
     }
 };
 ?>
