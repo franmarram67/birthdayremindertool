@@ -10,14 +10,14 @@ new class extends Component
 
     public function mount()
     {
-        $requestedYear = (int) request()->year ?? null;
+        $requestedYear = !is_null(request()->year) ? (int) request()->year : null;
         $this->year = is_null($requestedYear) ? date('Y') : $requestedYear;
         $this->month = date('m');
     }
 
     public function getMonthsOfYearForSelectSearch()
     {
-        $requestedMonth = (int) request()->month ?? null;
+        $requestedMonth = !is_null(request()->month) ? (int) request()->month : null;
         $months = [];
         $startMonth = Carbon::create(date('Y'));
         for ($i = 1; $i <= 12; $i++) {
@@ -66,5 +66,8 @@ new class extends Component
                 </flux:field>
             </div>
         </form>
+    </div>
+    <div class="columns-7">
+        <div></div>
     </div>
 </div>
