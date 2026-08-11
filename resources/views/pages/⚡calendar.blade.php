@@ -35,6 +35,19 @@ new class extends Component
         $redirectUrl = "calendar?month={$this->month}&year={$this->year}";
         $this->redirect($redirectUrl, navigate: true);
     }
+
+    public function getDaysOfWeek()
+    {
+        // I could use Carbon but I don't care
+        $dateTime = new DateTime('monday');
+        $plusOneDayInterval = DateInterval::createFromDateString("1 day");
+        $daysOfWeek = [];
+        for ($i = 1; $i <= 7; $i++) {
+            $daysOfWeek[$i] = $dateTime->format('l');
+            $dateTime->add($plusOneDayInterval);
+        }
+        dd($daysOfWeek);
+    }
 };
 ?>
 <div class="border dark:border-zinc-400 w-full h-full rounded-lg dark:bg-zinc-700">
@@ -68,6 +81,9 @@ new class extends Component
         </form>
     </div>
     <div class="columns-7">
+        @php
+            $this->getDaysOfWeek();
+        @endphp
         <div></div>
     </div>
 </div>
