@@ -46,7 +46,7 @@ new class extends Component
             $daysOfWeek[$i] = $dateTime->format('l');
             $dateTime->add($plusOneDayInterval);
         }
-        dd($daysOfWeek);
+        return $daysOfWeek;
     }
 };
 ?>
@@ -80,10 +80,10 @@ new class extends Component
             </div>
         </form>
     </div>
-    <div class="columns-7">
-        @php
-            $this->getDaysOfWeek();
-        @endphp
-        <div></div>
+    <div class="border-b border-zinc-400 mx-4"></div>
+    <div class="columns-7 m-4 gap-2">
+        @foreach ($this->getDaysOfWeek() as $dayOfWeek)
+            <div class="px-4 py-2 rounded-lg bg-zinc-800 text-sm flex justify-center items-center">{{ $dayOfWeek }}</div>
+        @endforeach
     </div>
 </div>
